@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 const axiosInstance = axios.create({
-    baseURL: 'http://apna-app',
+    baseURL: 'http://localhost:5000',
 });
 
 
