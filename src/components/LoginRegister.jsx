@@ -14,12 +14,13 @@ const LoginRegister = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
+
     try {
       const { data } = await axiosInstance.post(endpoint, form);
-      login(data.token, data.user || data); // Adjust if your API returns { token, user }
+      login(data.token, { _id: data._id, name: data.name, email: data.email });
       navigate('/dashboard');
     } catch (err) {
-      alert('Invalid credentials');
+      alert(err.response?.data?.message || 'Invalid credentials');
     }
   };
 
@@ -36,7 +37,7 @@ const LoginRegister = () => {
               placeholder="Name"
               value={form.name}
               onChange={handleChange}
-              className="border p-2 mb-4 w-full rounded"
+              className="border p-2 mb-4 w-full rounded bg-white text-black"
               required
             />
           )}
@@ -46,7 +47,7 @@ const LoginRegister = () => {
             type="email"
             value={form.email}
             onChange={handleChange}
-            className="border p-2 mb-4 w-full rounded"
+            className="border p-2 mb-4 w-full rounded bg-white text-black"
             required
           />
           <input
@@ -55,7 +56,7 @@ const LoginRegister = () => {
             type="password"
             value={form.password}
             onChange={handleChange}
-            className="border p-2 mb-4 w-full rounded"
+            className="border p-2 mb-4 w-full rounded bg-white text-black"
             required
           />
           <button className="bg-blue-500 w-full py-2 text-white rounded">

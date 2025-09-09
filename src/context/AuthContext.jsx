@@ -7,14 +7,16 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Fetch profile if token exists
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem('token');
       if (token) {
         axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         try {
-          const { data } = await axiosInstance.get('/auth/profile');
-          setUser(data);
+          const { data } = await axiosInstance.get('/api/auth/profile');
+          console.log("Profile data:", data);
+          setUser(data); // Set the user directly from response
         } catch (err) {
           console.error(err);
           localStorage.removeItem('token');
@@ -23,15 +25,18 @@ export const AuthProvider = ({ children }) => {
       }
       setLoading(false);
     };
+
     fetchProfile();
   }, []);
 
+  // Login function
   const login = (token, userData) => {
     localStorage.setItem('token', token);
     axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    setUser(userData);
+    setUser(userData); // Update user immediately after login
   };
 
+  // Logout function
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
